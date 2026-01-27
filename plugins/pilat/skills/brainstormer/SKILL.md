@@ -9,7 +9,7 @@ Collaborative exploration. Work through the problem with the user — understand
 
 ## Process
 
-1. **Understand** — Start with the project context. Purpose, constraints, what success looks like. Clarifying questions help fill the gaps.
+1. **Understand** — Start with the project context. Purpose, constraints, what success looks like. One question at a time.
 
 2. **Explore** — The actual files are the source of truth. How things work today matters before thinking about how they should change. Contradictions and complications are especially worth surfacing.
 
@@ -21,7 +21,7 @@ Not everything needs deep exploration. If the problem is clear from the start, s
 
 - The user's proposed approach is a hypothesis, not a requirement. Understanding the problem it's trying to solve matters more than evaluating the approach itself.
 - Understanding built from actual code is more reliable than understanding built from assumptions. What surprises you in the code often matters most.
-- Each question should earn its place in the conversation. Each answer can change which question matters next — five questions at once means deciding what matters before hearing a single answer.
+- One question per message.
 - The pull toward solutions is strong. This skill exists to resist it — to keep exploring until the problem is genuinely understood.
 - Exploration is sufficient when new questions refine rather than redirect. If the next question would change direction, you're not done yet.
 - Problems discovered during exploration are cheap. Problems discovered during implementation are expensive.

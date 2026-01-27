@@ -1,31 +1,33 @@
 ---
-name: implement
-description: Execute a plan through rigorous task-by-task implementation with TDD discipline and verification
+name: implementor
+description: Use when the user has a plan file (from plan-writer or similar) and wants it executed. Also use when user says "implement", "execute the plan", "build this", or passes a plan file path.
 ---
 
-# Implement
+# Implementor
 
 Execute a plan file with rigor: TDD discipline, verification before completion, self-review.
 
 ## Start
 
-1. Read plan file (Goal, Decisions, Tasks)
-2. Create tasks using TaskCreate
-3. Ask once: **"TDD or implementation-first?"**
+1. **Find the plan.** User may provide a path, or look for the most recent `plan*.md` / `PLAN*.md` in the working directory. If no plan found, ask.
+2. Read plan file (Goal, Decisions, Tasks)
+3. Create tasks using TaskCreate
+4. Ask once: **"TDD or implementation-first?"**
+   - If no test infrastructure exists in the project (no test framework, no test directory), default to implementation-first and note this.
 
-## Execution: Batches of 3
+## Execution: Batches
 
-Work in batches of 3 tasks, then checkpoint with user.
+Work in batches of ~3 tasks (adjust if tasks are trivially small or unusually large), then checkpoint with user.
 
 ### Per Task
 
 ```
 Mark in_progress
-      ↓
+      |
 [TDD mode?]
-├── YES → TDD Cycle (see below)
-└── NO  → Implement → Verify → Self-review
-      ↓
+|- YES -> TDD Cycle (see below)
+'- NO  -> Implement -> Verify -> Self-review
+      |
 Mark completed (only after verification passes)
 ```
 
@@ -36,16 +38,16 @@ Mark completed (only after verification passes)
 ### Red-Green-Refactor
 
 1. **RED:** Write ONE failing test
-2. **VERIFY RED:** Run test, watch it fail. If it passes → test is wrong, fix it.
+2. **VERIFY RED:** Run test, watch it fail. If it passes -> test is wrong, fix it.
 3. **GREEN:** Write MINIMAL code to pass (no extras)
 4. **VERIFY GREEN:** Run test, watch it pass.
 5. **REFACTOR:** Clean up, keep tests green.
 6. **COMMIT:** After each green.
 
 **Red flags:**
-- Test passes immediately → didn't test the right thing
-- Writing code before test → stop, write test first
-- "Just this once" → no exceptions
+- Test passes immediately -> didn't test the right thing
+- Writing code before test -> stop, write test first
+- "Just this once" -> no exceptions
 
 ## Verification Before Completion
 
@@ -65,12 +67,12 @@ Before marking ANY task completed:
 
 ## Self-Review Before Handoff
 
-After implementing, before marking complete, ask yourself:
+Before marking complete, check:
 
-- **Completeness:** Did I implement everything? Miss edge cases?
-- **Spec compliance:** Does it match what the plan asked for?
-- **Quality:** Is this my best work? Clear names? Clean code?
-- **YAGNI:** Did I add anything not requested? Remove it.
+- **Completeness:** Everything implemented? Edge cases?
+- **Spec compliance:** Matches what the plan asked for?
+- **Quality:** Best work? Clear names? Clean code?
+- **YAGNI:** Added anything not requested? Remove it.
 
 Fix issues found during self-review.
 
@@ -85,7 +87,7 @@ When reality differs from plan:
    - Discuss approach?
 3. **Document:** If continuing with deviation, note it for final summary
 
-## After Each Batch (3 tasks)
+## After Each Batch
 
 Pause and report:
 - What was implemented

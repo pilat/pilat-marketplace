@@ -31,4 +31,4 @@ Not every exploration leads to a multi-task plan. A single task with the diagnos
 
 ## When done
 
-Point the user to `pilat:implement` for execution.
+Point the user to `pilat:implementor` for execution.
