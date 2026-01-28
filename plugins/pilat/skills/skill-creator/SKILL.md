@@ -1,9 +1,9 @@
 ---
-name: creating-skills
+name: skill-creator
 description: Use when asked to create, write, or build a Claude Code skill. Guides through requirements gathering, internal testing with subagents, and outputs production-ready SKILL.md files.
 ---
 
-# Creating Skills
+# Skill Creator
 
 Meta-skill for writing excellent Claude Code skills. Combines Anthropic's official best practices with iterative testing to produce polished, discoverable skills.
 
