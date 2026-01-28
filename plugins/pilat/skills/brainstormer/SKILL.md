@@ -9,17 +9,13 @@ Collaborative exploration. Work through the problem with the user — understand
 
 ## Process
 
-1. **Understand** — Start with the project context. Purpose, constraints, what success looks like. One question at a time.
+**First, understand.** Start with the project context. Purpose, constraints, what success looks like. The actual files are the source of truth — how things work today matters before thinking about how they should change. Contradictions and complications are especially worth surfacing.
 
-2. **Explore** — The actual files are the source of truth. How things work today matters before thinking about how they should change. Contradictions and complications are especially worth surfacing.
+Each question deserves its own turn. Bundled questions get bundled answers — shallow and rushed. When a choice would help, offer one: "Is it more like A or B?" is easier to answer than "What is it like?"
 
-3. **Talk it through** — One approach at a time. Your perspective matters when you have one. Don't present a menu — explore one thread, then the next. What feels too easy often isn't. What's hard to reverse deserves more time.
+**Then, once you understand, explore approaches.** Still one thread at a time — presenting three options is three messages, not one. Approaches are cheap to generate but expensive to evaluate. Understanding the problem first means the approaches you propose will be worth evaluating. Your perspective matters when you have one. What feels too easy often isn't. What's hard to reverse deserves more time.
 
 Not everything needs deep exploration. If the problem is clear from the start, say so. Match the depth to the problem.
-
-## Cognitive Load
-
-Do NOT analyze multiple options in one response. When the user lists options, pick the first thing you don't understand and ask about that. The options are hypotheses to explore one at a time, not an assignment to evaluate all at once.
 
 ## Principles
 
