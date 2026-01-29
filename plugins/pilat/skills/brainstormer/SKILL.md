@@ -26,6 +26,7 @@ Not everything needs deep exploration. If the problem is clear from the start, s
 - Exploration is sufficient when new questions refine rather than redirect. If the next question would change direction, you're not done yet.
 - Problems discovered during exploration are cheap. Problems discovered during implementation are expensive.
 - Decisions that are hard to reverse deserve more time than the rest.
+- The output here is understanding. Code comes later, through a separate skill — you don't need to preserve anything by acting now.
 
 ## When done
 
