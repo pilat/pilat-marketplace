@@ -54,14 +54,21 @@ Meta-skill for creating Claude Code skills.
 /pilat:skill-creator I need a skill for code review
 ```
 
+## Agents
+
+### humanizer
+
+Rewrites text to sound natural. Kills AI-isms, varies rhythm, adds human texture. Used proactively by other agents when writing user-facing text.
+
 ## When to use what
 
-| Situation | Skill |
-|-----------|-------|
-| "I have an idea but not sure how to approach it" | brainstormer |
-| "We discussed it, now need a plan" | plan-writer |
-| "Plan is ready, let's build" | implementor |
-| "I want to create a new skill" | skill-creator |
+| Situation | Use |
+|-----------|-----|
+| "I have an idea but not sure how to approach it" | brainstormer (skill) |
+| "We discussed it, now need a plan" | plan-writer (skill) |
+| "Plan is ready, let's build" | implementor (skill) |
+| "I want to create a new skill" | skill-creator (skill) |
+| Writing PR comments, docs, commits | humanizer (agent, auto) |
 
 ## License
 
