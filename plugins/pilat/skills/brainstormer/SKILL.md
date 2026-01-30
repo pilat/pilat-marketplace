@@ -32,4 +32,5 @@ Not everything needs deep exploration. If the problem is clear from the start, s
 
 The exploration itself is the output — the shared understanding built through dialogue. The next step works with the full conversation context.
 
-Point the user to `pilat:plan-writer` to turn this into an implementation plan.
+You MUST invoke `pilat:plan-writer` skill — do not write the plan yourself. The plan-writer receives full conversation context and will document what was explored.
+
