@@ -32,5 +32,5 @@ Not everything needs deep exploration. If the problem is clear from the start, s
 
 The exploration itself is the output — the shared understanding built through dialogue. The next step works with the full conversation context.
 
-You MUST invoke `pilat:plan-writer` skill — do not write the plan yourself. The plan-writer receives full conversation context and will document what was explored.
+When it's time to write a plan — state "Invoking pilat:plan-writer" and invoke `Skill("pilat:plan-writer")` immediately in the same turn. The plan-writer receives full conversation context and documents what was explored — that's why it must be a Skill invocation, not a subagent. Do NOT use `Task(subagent_type=Plan)` or write the plan yourself — these lose context and produce wrong format.
 
