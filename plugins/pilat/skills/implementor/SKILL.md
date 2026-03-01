@@ -1,6 +1,6 @@
 ---
 name: implementor
-description: Use when the user has a plan file (from plan-writer or similar) and wants it executed. Also use when user says "implement", "execute the plan", "build this", or passes a plan file path.
+description: Use when the user has a plan file (from handoff-plan or similar) and wants it executed. Also use when user says "implement", "execute the plan", "build this", or passes a plan file path.
 ---
 
 # Implementor

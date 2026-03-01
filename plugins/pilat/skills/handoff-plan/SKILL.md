@@ -1,6 +1,7 @@
 ---
-name: plan-writer
+name: "pilat:handoff-plan"
 description: "Turn exploration into an implementation plan that a fresh session can execute independently."
+user-invocable: false
 ---
 
 # Plan Writer
