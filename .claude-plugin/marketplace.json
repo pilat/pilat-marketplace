@@ -1,18 +1,45 @@
 {
   "name": "pilat-marketplace",
+  "version": "1.2.0",
+  "description": "Battle-tested Claude Code skills for professional development workflows",
   "owner": {
     "name": "Vladimir Urushev",
     "email": "vkurushev@gmail.com"
   },
   "metadata": {
     "description": "Battle-tested Claude Code skills for professional development workflows",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   "plugins": [
     {
       "name": "pilat",
       "source": "./plugins/pilat",
-      "description": "Sketching, skill creation, and professional workflow tools"
+      "description": "Brainstorm, plan, implement, create skills, humanize text - professional workflow tools for Claude Code",
+      "version": "0.4.0",
+      "author": {
+        "name": "Vladimir Urushev",
+        "email": "vkurushev@gmail.com"
+      },
+      "homepage": "https://github.com/pilat/pilat-marketplace",
+      "repository": "https://github.com/pilat/pilat-marketplace",
+      "license": "MIT",
+      "keywords": [
+        "brainstormer",
+        "planning",
+        "implement",
+        "tdd",
+        "skills",
+        "humanizer",
+        "workflow"
+      ],
+      "category": "productivity",
+      "tags": [
+        "brainstorm",
+        "planning",
+        "tdd",
+        "skill-creator",
+        "humanizer"
+      ]
     }
   ]
 }

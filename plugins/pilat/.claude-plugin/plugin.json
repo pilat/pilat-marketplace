@@ -6,6 +6,9 @@
     "name": "Vladimir Urushev",
     "email": "vkurushev@gmail.com"
   },
+  "homepage": "https://github.com/pilat/pilat-marketplace",
+  "repository": "https://github.com/pilat/pilat-marketplace",
+  "license": "MIT",
   "keywords": [
     "brainstormer",
     "planning",
