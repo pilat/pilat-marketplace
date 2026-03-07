@@ -1,5 +1,4 @@
 ---
-name: skill-creator
 description: Use when asked to create, write, or build a Claude Code skill. Guides through requirements gathering, internal testing with subagents, and outputs production-ready SKILL.md files.
 ---
 

@@ -1,5 +1,4 @@
 ---
-name: "pilat:handoff-plan"
 description: "Turn exploration into an implementation plan that a fresh session can execute independently."
 user-invocable: false
 ---
@@ -10,10 +9,11 @@ The exploration is done. The decisions are made. What remains is a plan that a s
 
 ## The Plan
 
-Save to the project's existing plan or task folder if one exists. Otherwise, suggest a location. Filename: `YYYY-MM-DD-<topic-slug>.md`
+Save to the project's existing plan or task folder if one exists. Otherwise, save in the working directory. Filename: `plan-YYYY-MM-DD-<topic-slug>.md`
 
 The audience is a **fresh session that cannot ask the original human**:
 
+- **Goal**: what we're trying to achieve and why, in one paragraph.
 - **Decisions**: what was chosen, why, and what was traded away — so the implementer understands the reasoning and doesn't try to reverse it.
 - **Constraints**: explicit rules where it matters — what the implementer must or must not do.
 - **Affected code**: actual files that will change and why, grounded in what was explored.

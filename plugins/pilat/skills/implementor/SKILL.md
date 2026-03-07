@@ -1,99 +1,45 @@
 ---
-name: implementor
-description: Use when the user has a plan file (from handoff-plan or similar) and wants it executed. Also use when user says "implement", "execute the plan", "build this", or passes a plan file path.
+description: Use when the user has a plan file (from plan-handoff or similar) and wants it executed. Also use when user says "implement", "execute the plan", "build this", or passes a plan file path.
 ---
 
 # Implementor
 
-Execute a plan file with rigor: TDD discipline, verification before completion, self-review.
+Execute a plan file with rigor: verification before completion, self-review.
 
 ## Start
 
 1. **Find the plan.** User may provide a path, or look for the most recent `plan*.md` / `PLAN*.md` in the working directory. If no plan found, ask.
 2. Read plan file (Goal, Decisions, Tasks)
 3. Create tasks using TaskCreate
-4. Ask once: **"TDD or implementation-first?"**
-   - If no test infrastructure exists in the project (no test framework, no test directory), default to implementation-first and note this.
 
-## Execution: Batches
+## Execution
 
-Work in batches of ~3 tasks (adjust if tasks are trivially small or unusually large), then checkpoint with user.
+Work through all tasks sequentially. Do not pause between tasks — keep going until all are done or you hit a blocker. If a task specifies TDD, follow red-green-refactor for that task.
 
 ### Per Task
 
-```
-Mark in_progress
-      |
-[TDD mode?]
-|- YES -> TDD Cycle (see below)
-'- NO  -> Implement -> Verify -> Self-review
-      |
-Mark completed (only after verification passes)
-```
+1. Mark `in_progress`
+2. Implement
+3. Verify — run the relevant check (test, build, lint, whatever applies). Read the output, confirm it passes. Do not claim "should pass" without running.
+4. Mark `completed`
 
-## TDD Discipline
+## Self-Review
 
-**Rule:** No production code without a failing test first.
+Before marking the final task complete, review all changes holistically:
 
-### Red-Green-Refactor
-
-1. **RED:** Write ONE failing test
-2. **VERIFY RED:** Run test, watch it fail. If it passes -> test is wrong, fix it.
-3. **GREEN:** Write MINIMAL code to pass (no extras)
-4. **VERIFY GREEN:** Run test, watch it pass.
-5. **REFACTOR:** Clean up, keep tests green.
-6. **COMMIT:** After each green.
-
-**Red flags:**
-- Test passes immediately -> didn't test the right thing
-- Writing code before test -> stop, write test first
-- "Just this once" -> no exceptions
-
-## Verification Before Completion
-
-**Rule:** No completion claims without fresh evidence.
-
-Before marking ANY task completed:
-
-1. **RUN** the verification command (test, build, lint)
-2. **READ** full output
-3. **CONFIRM** it actually passes (0 failures, exit code 0)
-4. **ONLY THEN** mark completed
-
-**Never:**
-- Say "should pass" without running
-- Trust previous run (run fresh)
-- Mark done if tests are red
-
-## Self-Review Before Handoff
-
-Before marking complete, check:
-
-- **Completeness:** Everything implemented? Edge cases?
-- **Spec compliance:** Matches what the plan asked for?
-- **Quality:** Best work? Clear names? Clean code?
+- **Completeness:** Everything the plan asked for?
+- **Spec compliance:** Matches the plan's decisions?
 - **YAGNI:** Added anything not requested? Remove it.
 
-Fix issues found during self-review.
+Fix issues found. Then proceed to handoff-review (see Completion).
 
 ## Divergence Protocol
 
 When reality differs from plan:
 
 1. **Acknowledge:** "Plan said X, but Y needed because [reason]"
-2. **Ask:**
-   - Update plan file?
-   - Note as deviation and continue?
-   - Discuss approach?
-3. **Document:** If continuing with deviation, note it for final summary
-
-## After Each Batch
-
-Pause and report:
-- What was implemented
-- Test results (paste output)
-- Any deviations
-- "Ready for next batch?"
+2. **Decide:** If the deviation is minor, note it and keep going. If it changes the architecture or affects other tasks, ask the user.
+3. **Document:** Note deviations for the final summary.
 
 ## Subagent Delegation
 
@@ -101,14 +47,14 @@ If delegating task to subagent:
 
 1. **Provide full task text** (don't make subagent read plan file)
 2. **Include context:** where this fits, relevant patterns, constraints
-3. **Require:** subagent follows same TDD/verification rules
-4. **Review result:** verify tests pass before accepting
+3. **Review result:** verify it works before accepting
 
 ## Completion
 
 When all tasks done:
-1. Run full test suite
-2. Show summary: what built, deviations, test results
+
+1. **Invoke `Skill("pilat:handoff-review")`** — this is NOT optional. Fresh-eyes subagents will review what you built. Do NOT use `Task(subagent_type=...)` and do NOT skip this step. The Skill invocation preserves full conversation context which the reviewers need. Do NOT write a summary or report completion until this step finishes.
+2. Show summary: what built, deviations, review findings.
 3. Offer: "Create PR?" or "Ready for manual testing?"
 
 ## Commands
