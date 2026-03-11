@@ -25,10 +25,33 @@ Not every exploration leads to a multi-task plan. A single task with the diagnos
 ## Principles
 
 - Everything discovered during exploration is context. The contradictions, complications, and surprises matter most.
-- Flaws in the plan become bugs in the implementation.
 - Decisions that are hard to reverse deserve careful articulation. The rest can move quickly.
 - If it's not needed for the goal, leave it out. When a task is inherently cross-cutting, break it into phases and be explicit about what's in this plan vs what's deferred.
 - The output is a plan, not code.
+
+## Before You're Done
+
+You have something the implementer won't: the full exploration context. Every decision, every complication, every rejected alternative. The plan is a lossy compression of all that — and the implementer will build from the compressed version. What gets lost here becomes a wrong assumption there.
+
+### Self-check
+
+**Enumerate first.** Before looking at the plan again, go through the exploration and list every decision made, every constraint stated, every edge case raised, every rejected alternative as a numbered list. Commit to what SHOULD be in the plan before checking what IS.
+
+**Verify.** For each item, note where in the plan it appears or mark it MISSING. Add every MISSING item to the appropriate section.
+
+**Scan for implicit knowledge.** Search the plan for hedging language: "handle appropriately," "as discussed," "the usual approach," "relevant files," "etc." These are fingerprints of things you know but didn't write down — places where the implementer will have to guess. Replace each one with specifics.
+
+### Fresh-eyes check
+
+Launch review subagents (Task) to read the plan cold. Provide ONLY the plan file path — do not summarize the exploration, do not add "helpful context," do not explain what the plan is about. The subagent must experience exactly what the implementer will: the plan file and the codebase, nothing else.
+
+**One subagent (straightforward plan):** "You are about to implement this plan in a fresh session with no other context. Read it and identify every point where you would need to stop and ask a question, make an assumption, or guess. For each, say what's missing and what you'd need to know to proceed."
+
+**Two subagents (multi-task or cross-cutting plan):** The first is the builder — same brief as above, walks through each step, finds where they'd get stuck. The second is the reviewer: "Someone implemented this plan. You're reviewing their work. Based ONLY on what the plan says, how would you verify the implementation is correct? Where could two reasonable implementers produce meaningfully different results from these same instructions?"
+
+### Integrate findings
+
+Collect findings from self-check and subagents. For gaps — missing information needed for implementation — fix the plan directly. If a finding contradicts a decision made during exploration, surface it to the user rather than overriding it.
 
 ## When done
 
