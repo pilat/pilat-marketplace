@@ -15,7 +15,7 @@
       "name": "pilat",
       "source": "./plugins/pilat",
       "description": "Brainstorm, plan, implement, create skills, humanize text - professional workflow tools for Claude Code",
-      "version": "0.8.0",
+      "version": "0.9.0",
       "author": {
         "name": "Vladimir Urushev",
         "email": "vkurushev@gmail.com"
