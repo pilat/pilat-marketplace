@@ -53,9 +53,10 @@ If delegating task to subagent:
 
 When all tasks done:
 
-1. **Invoke `Skill("pilat:handoff-review")`** — this is NOT optional. Fresh-eyes subagents will review what you built. Do NOT use `Task(subagent_type=...)` and do NOT skip this step. The Skill invocation preserves full conversation context which the reviewers need. Do NOT write a summary or report completion until this step finishes.
-2. Show summary: what built, deviations, review findings.
-3. Offer: "Create PR?" or "Ready for manual testing?"
+1. **Invoke `Skill("pilat:handoff-review")`** — this is NOT optional. Fresh-eyes subagents will review what you built. Do NOT use `Task(subagent_type=...)` and do NOT skip this step. The Skill invocation preserves full conversation context which the reviewers need. Do NOT write a summary or report completion until this step finishes. If the review surfaces issues that require code changes, address them and re-run review before proceeding.
+2. **Architecture doc sync (only if `ARCHITECTURE.md` exists at project root).** Check for `ARCHITECTURE.md`. If it does NOT exist — skip this step **entirely and silently**: do not mention arch-sync, do not say "skipped", do not include doc sync in the summary. Proceed directly to step 3. If `ARCHITECTURE.md` exists — invoke `Skill("pilat:arch-sync")`. It analyzes the implementation diff against the docs and returns a drift report plus suggested doc edits (analysis only — it does not modify files). If drift was found, show the report and offer the user: "Apply suggested doc updates? (y/n)". If yes, apply each suggested edit to the relevant doc file yourself using the Edit tool — only `.md` files under the project (ARCHITECTURE.md, docs/coding-style.md, docs/adr/, CLAUDE.md), never source code. Never auto-apply. This runs **after** review so any review-driven code changes are included.
+3. Show summary: what built, deviations, review findings. Mention doc updates only if step 2 actually ran.
+4. Offer: "Create PR?" or "Ready for manual testing?"
 
 ## Commands
 

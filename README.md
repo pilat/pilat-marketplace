@@ -83,6 +83,18 @@ Meta-skill for creating Claude Code skills.
 /pilat:skill-creator I need a skill for code review
 ```
 
+### arch-init
+
+Set up architecture documentation that knows how to maintain itself. Generates `ARCHITECTURE.md` and `CLAUDE.md` at project root, `docs/coding-style.md` and `docs/adr/` under `docs/` — all with project-specific sync rules embedded. Works for any language, not just modular codebases. Skips monorepos cleanly.
+
+```
+/pilat:arch-init
+```
+
+### arch-sync (auto)
+
+Intelligent reviewer that compares docs vs code. Uses sync guidance from docs as a starting point, but applies judgment — catches drift the rules don't cover, ignores noise like test dependencies. Analysis-only: returns a drift report plus suggested doc edits; the caller (implementor) decides what to apply. Not user-invocable — called automatically by implementor after handoff-review.
+
 ## Agents
 
 ### humanizer
@@ -98,6 +110,8 @@ Rewrites text to sound natural. Kills AI-isms, varies rhythm, adds human texture
 | "Plan is ready, let's build" | implementor (skill) |
 | "Code is done, need review" | handoff-review (auto, via implementor) |
 | "I want to create a new skill" | skill-creator (skill) |
+| "Set up architecture docs for this project" | arch-init (skill) |
+| "Did the implementation drift from the docs?" | arch-sync (auto, via implementor) |
 | Writing PR comments, docs, commits | humanizer (agent, auto) |
 
 ## License
