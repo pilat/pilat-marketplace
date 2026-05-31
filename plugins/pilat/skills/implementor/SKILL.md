@@ -16,6 +16,8 @@ Execute a plan file with rigor: verification before completion, self-review.
 
 Work through all tasks sequentially. Do not pause between tasks — keep going until all are done or you hit a blocker. If a task specifies TDD, follow red-green-refactor for that task.
 
+**Opportunistic parallelism (optional).** Sequential is the default — always safe. But when a plan has several tasks that are genuinely independent — they don't touch the same code and nothing in the plan makes one depend on another — and you have tooling to run subagents in parallel (a Workflow), you MAY fan them out. When in doubt, stay sequential. If you do parallelize, verify the combined result before moving on.
+
 ### Per Task
 
 1. Mark `in_progress`
