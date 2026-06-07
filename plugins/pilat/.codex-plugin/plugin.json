@@ -1,0 +1,38 @@
+{
+  "name": "pilat",
+  "version": "0.11.0",
+  "description": "Battle-tested skills for professional workflows - brainstorm, plan, implement, skill creation",
+  "author": {
+    "name": "Vladimir Urushev",
+    "email": "vkurushev@gmail.com"
+  },
+  "homepage": "https://github.com/pilat/pilat-marketplace",
+  "repository": "https://github.com/pilat/pilat-marketplace",
+  "license": "MIT",
+  "keywords": [
+    "brainstorm",
+    "planning",
+    "implement",
+    "tdd",
+    "skills"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Pilat",
+    "shortDescription": "Deliberate development workflows for Codex",
+    "longDescription": "Use Pilat to explore changes before implementation, write executable handoff plans, implement with verification, review the result, and keep architecture docs in sync.",
+    "developerName": "Vladimir Urushev",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use Pilat to explore this change before implementing it.",
+      "Use Pilat to execute the latest plan file."
+    ],
+    "websiteURL": "https://github.com/pilat/pilat-marketplace",
+    "brandColor": "#2563EB"
+  }
+}

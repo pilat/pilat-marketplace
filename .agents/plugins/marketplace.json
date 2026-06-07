@@ -1,0 +1,20 @@
+{
+  "name": "pilat-marketplace",
+  "interface": {
+    "displayName": "Pilat Marketplace"
+  },
+  "plugins": [
+    {
+      "name": "pilat",
+      "source": {
+        "source": "local",
+        "path": "./plugins/pilat"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
