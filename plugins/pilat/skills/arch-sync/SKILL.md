@@ -16,6 +16,7 @@ Keep docs aligned with reality. Read the docs, look at recent code changes, fix 
 You may edit only these files (when they exist at the project root):
 - `ARCHITECTURE.md`
 - `CLAUDE.md`
+- `docs/glossary.md`
 - `docs/coding-style.md`
 - Any file under `docs/adr/`
 
@@ -25,7 +26,7 @@ You may edit only these files (when they exist at the project root):
 
 ### 1. Read the docs
 
-Start with CLAUDE.md → ARCHITECTURE.md (project root) → docs/coding-style.md → docs/adr/ if present. Look for sections that explain how to verify sync — arch-init puts these in. These are your starting point, not your entire scope.
+Start with CLAUDE.md → docs/glossary.md → ARCHITECTURE.md (project root) → docs/coding-style.md → docs/adr/ if present. Look for sections that explain how to verify sync — arch-init puts these in. These are your starting point, not your entire scope.
 
 ### 2. Understand what changed
 
@@ -43,6 +44,7 @@ Using the sync guidance from the docs AND your own understanding:
 - Are dependencies/relationships still accurate?
 - Did public interfaces change without doc updates?
 - Are there new components the docs don't mention?
+- Did the diff introduce domain concepts docs/glossary.md doesn't know, or identifiers built on its `_Avoid_` synonyms?
 - Did someone add something that violates stated invariants?
 - Does the overall description still ring true?
 - Is CLAUDE.md still accurate? (read order, non-negotiables, skill guidance)
@@ -66,6 +68,8 @@ The sync rules in the docs are guidance, not a script. You will notice things th
 - **Test dependency not in docs:** Someone added testify or jest. Ignore it — test tooling isn't architecture. **Borderline test tools** (testcontainers, MSW with cross-cutting fixtures, anything that runs Docker or affects runtime topology) — update the docs, they're architectural.
 
 - **Pattern erosion:** ARCHITECTURE describes Repository pattern but you see direct DB calls creeping in. Don't quietly update the doc to legitimize tech debt — flag it as "code violates documented pattern" in the report and leave the doc alone. Sync direction is docs ← code only when the code change was deliberate.
+
+- **Glossary drift:** a new domain concept in the diff that docs/glossary.md doesn't know → add the entry yourself (tight definition, `_Avoid_` when a real synonym exists). An identifier built on an avoided synonym is the naming version of pattern erosion: one stray name → flag as code drift, glossary untouched. A deliberate, consistent rename that contradicts a canonical term → don't rewrite the glossary to match; record the conflict under `## Flagged ambiguities` and in the report — dethroning a canonical term is the user's call. If docs/glossary.md is absent (project predates it), skip glossary checks — arch-sync doesn't create it.
 
 - **Alignment toward documented style:** If a change moves code TOWARD the documented pattern (e.g., refactor from nested error handling to flat IIFE that matches docs/coding-style.md), note it as `in sync` with a positive line. Confirming alignment is a signal the docs are working.
 
@@ -107,8 +111,11 @@ Synced ARCHITECTURE.md:
 
 docs/coding-style.md: in sync. Refactor in internal/api/orders.go aligned with documented IIFE pattern.
 
+docs/glossary.md: added **Reservation** (new concept in internal/booking/).
+
 Flagged (no doc change made):
 - internal/services/notifier.go uses direct DB calls — violates Repository pattern in §3. Code drift, not doc drift.
+- internal/api/checkout.go names it "basket" — docs/glossary.md says avoid, use **Cart**. Code drift, not doc drift.
 
 ADR candidates:
 - Email delivery via SendGrid (new outbound dependency)

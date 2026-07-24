@@ -49,7 +49,7 @@ flowchart TD
     %% optional architecture-docs track
     ai["<b>arch-init</b><br/>scaffold self-maintaining docs"]:::manual
     asy["<b>arch-sync</b><br/>docs catch up to the code"]:::auto
-    docs["ARCHITECTURE.md · CLAUDE.md<br/>docs/coding-style.md · docs/adr/"]:::artifact
+    docs["ARCHITECTURE.md · CLAUDE.md<br/>docs/coding-style.md · docs/glossary.md · docs/adr/"]:::artifact
 
     ai -. scaffolds .-> docs
     hr -. if docs exist .-> asy
@@ -65,7 +65,7 @@ Blue is a skill you invoke. Green runs automatically once the pipeline reaches i
 
 There are two ways in. A new feature starts at **brainstormer**. A bug starts at **root-cause**, which diagnoses it and hands the diagnosis to the same place, so a fix is explored like any other change instead of reflex-patched. From there it's a single line: understand, write the plan, **start a fresh session**, build, review, open the PR. That fresh-session step is the load-bearing one: the plan file is where the exploration context gets dropped on purpose, so implementation runs in a clean window.
 
-Off to the side, drawn in dotted lines, is the optional architecture-docs track: `arch-init` scaffolds the docs once (ARCHITECTURE.md, CLAUDE.md, a coding-style doc, an ADR log), and after each cycle `arch-sync` brings them back in step with the code. No docs, no sync, and it stays out of the way.
+Off to the side, drawn in dotted lines, is the optional architecture-docs track: `arch-init` scaffolds the docs once (ARCHITECTURE.md, CLAUDE.md, a coding-style doc, a project glossary, an ADR log), and after each cycle `arch-sync` brings them back in step with the code. No docs, no sync, and it stays out of the way.
 
 ## Installation
 
@@ -110,7 +110,7 @@ Start here when it's a bug. A bug shows at the symptom, but the cause is usually
 
 ### arch-init
 
-Set up architecture docs that maintain themselves. Run it once per project. It studies the codebase and scaffolds `ARCHITECTURE.md`, `CLAUDE.md`, a coding-style doc, and an ADR log, each carrying its own project-specific rules for staying in sync. It skips monorepos (one doc can't honestly describe several independently-shipped services) and trivial repos (nothing to document) on purpose.
+Set up architecture docs that maintain themselves. Run it once per project. It studies the codebase and scaffolds `ARCHITECTURE.md`, `CLAUDE.md`, a coding-style doc, a project glossary (`docs/glossary.md`), and an ADR log, each carrying its own project-specific rules for staying in sync. It skips monorepos (one doc can't honestly describe several independently-shipped services) and trivial repos (nothing to document) on purpose.
 
 ```
 /pilat:arch-init
@@ -153,6 +153,8 @@ Rewrites user-facing text (PR descriptions, commit messages, docs) to read like 
 The two-step spine, explore then implement, started as a rebuild of [obra/superpowers](https://github.com/obra/superpowers). superpowers uses a command-style voice ("you MUST," iron laws); these took a different tack (see above) and are rewritten rather than forked. Different philosophy, same debt — the structure and a lot of the thinking started there.
 
 The shape it converged on (understand, then plan, then build) is the same one the industry landed on with spec-driven development (GitHub's Spec Kit: Specify, Plan, Tasks, Implement). Same conclusion from a different direction: an agent does better work when it knows what it's building before it starts.
+
+The project glossary in the architecture-docs track is borrowed from [mattpocock/skills](https://github.com/mattpocock/skills), where a shared-vocabulary file stops agents from using twenty words where the project has one. Here it lives at `docs/glossary.md`, seeded by arch-init and grown by brainstormer and arch-sync as ambiguities surface, rather than through a dedicated skill.
 
 ## License
 
