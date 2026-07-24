@@ -8,7 +8,7 @@ Set up architecture documentation that knows how to maintain itself.
 
 ## Goal
 
-Create docs (ARCHITECTURE.md, docs/coding-style.md, CLAUDE.md, docs/adr/) that:
+Create docs (ARCHITECTURE.md, docs/coding-style.md, CLAUDE.md, docs/glossary.md, docs/adr/) that:
 1. Describe the project's architecture accurately
 2. Contain project-specific rules for how to keep them in sync with code
 3. Work for any project structure — not just modular codebases
@@ -48,7 +48,7 @@ Phase 1 output: A map of "what matters" and "where to look deeper". Decisions ab
 ### Phase 2: Deep Dive
 
 Based on Phase 1 findings, spawn subagents to explore specific areas:
-- If there's a domain layer → understand key entities and their relationships
+- If there's a domain layer → understand key entities and their relationships (these seed docs/glossary.md)
 - If there's an API surface → document endpoints/exports and how to detect changes
 - If there are architectural invariants → capture them (dependency rules, layer boundaries)
 - If there's state management → understand what owns what
@@ -60,16 +60,16 @@ Phase 2 output: Enough understanding to write accurate docs with project-specifi
 
 File layout:
 - `ARCHITECTURE.md` and `CLAUDE.md` at project root (top-level agent-facing docs; ALL_CAPS naming follows the established root-doc convention used across open-source)
-- `docs/coding-style.md` and `docs/adr/` under `docs/` (lowercase-kebab; ADR folder follows the `docs/adr/` convention popularized by Martin Fowler and adr-tools)
+- `docs/coding-style.md`, `docs/glossary.md`, and `docs/adr/` under `docs/` (lowercase-kebab; ADR folder follows the `docs/adr/` convention popularized by Martin Fowler and adr-tools)
 
 Create the `docs/` directory if it doesn't exist.
 
 **Never overwrite pre-existing files.** Treat anything already on disk as user content:
 - `CLAUDE.md` exists → append-only, see collision rules in the CLAUDE.md section below.
-- `ARCHITECTURE.md` / `docs/coding-style.md` / any file under `docs/adr/` already exists → stop and ask the user before changing it. Default: leave it, propose updates as a diff.
+- `ARCHITECTURE.md` / `docs/glossary.md` / `docs/coding-style.md` / any file under `docs/adr/` already exists → stop and ask the user before changing it. Default: leave it, propose updates as a diff.
 - Other pre-existing files under `docs/` (e.g., hand-written `docs/api.md`, `docs/runbook.md`, `docs/setup.md`) → leave them untouched. You may reference them from ARCHITECTURE.md or CLAUDE.md read order, but never edit their content.
 
-**Watch for functional duplicates at different paths.** If you spot an existing doc that serves the same purpose as one you're about to generate (e.g., a hand-written `docs/architecture.md`, `docs/design.md`, or `ARCHITECTURE_OVERVIEW.md` while you're about to create `ARCHITECTURE.md` at root; or a hand-written `docs/style.md` vs your `docs/coding-style.md`), stop and ask before generating. Don't ship two competing docs in the same project — that's how teams end up with three sources of truth and zero accurate ones. Offer the user a clear choice: (a) skip generation, the existing doc is authoritative; (b) generate yours, mark the existing as legacy in the read order; (c) migrate content from the old into the new and remove the old. Their call, not yours.
+**Watch for functional duplicates at different paths.** If you spot an existing doc that serves the same purpose as one you're about to generate (e.g., a hand-written `docs/architecture.md`, `docs/design.md`, or `ARCHITECTURE_OVERVIEW.md` while you're about to create `ARCHITECTURE.md` at root; or a hand-written `docs/style.md` vs your `docs/coding-style.md`; or a root `GLOSSARY.md` / `CONTEXT.md` vs your `docs/glossary.md`), stop and ask before generating. Don't ship two competing docs in the same project — that's how teams end up with three sources of truth and zero accurate ones. Offer the user a clear choice: (a) skip generation, the existing doc is authoritative; (b) generate yours, mark the existing as legacy in the read order; (c) migrate content from the old into the new and remove the old. Their call, not yours.
 
 ### ARCHITECTURE.md
 
@@ -97,10 +97,30 @@ Code and architecture style rules. Two parts:
 1. **If linter/formatter configs exist** (e.g., `.eslintrc`, `.prettier*`, `.ruff.toml`, `pyproject.toml [tool.ruff]`, `.rustfmt.toml`, `.golangci.yml`, `.editorconfig`): extract the actual rules and document them. These are the team's real conventions.
 2. **If no config exists:** scan the actual code for de-facto patterns (error handling, naming, import order, file size, where business logic lives). Then look up the dominant style for the language (gofmt + golangci-lint for Go, ruff + black for Python, rustfmt + clippy for Rust, eslint + prettier for JS/TS, rubocop for Ruby, php-cs-fixer for PHP, etc.) and propose those as the baseline. Ask the user ONE question: "No style config detected. Use [language-standard tool] defaults as the baseline, or do you have other conventions in mind?" Codify their answer. Don't invent rules from scratch — pick from established practice and let them confirm.
 
+### docs/glossary.md
+
+Before writing it, check for an existing glossary (a root `GLOSSARY.md` or `CONTEXT.md`) — that's a functional duplicate: stop and ask, per the duplicates rule above.
+
+Project glossary — the shared vocabulary. It pays off three ways: variables, functions, and files get named consistently; the codebase gets easier to navigate; and agents stop spending twenty words paraphrasing a concept the project names in one.
+
+Entry format:
+
+```md
+**Order**:
+A confirmed request to buy, created at checkout.
+_Avoid_: purchase, transaction
+```
+
+Definitions are one tight paragraph — what the thing IS, not what it does. The `_Avoid_` line is the load-bearing part: a glossary that names the winner but not the banned synonyms is decorative. Omit `_Avoid_` when a term has no tempting synonym — a manufactured one weakens the real bans. Close the file with a `## Flagged ambiguities` section for naming conflicts, open and resolved.
+
+Seed it from what the code already reveals — the entities and terms Phase 2 surfaced. Project-specific concepts only; general programming vocabulary (handlers, retries, timeouts) doesn't belong, however often it appears. When code and prose disagree on a name (README says cart, the type is `basket`), pick one winner, put the loser on `_Avoid_`, and log the conflict in `## Flagged ambiguities` — a silent pick reads as authoritative and buries a discussion nobody had.
+
+Like the other docs, it carries its own maintenance rule. Write it in near the top: entries are added in the same turn an ambiguity surfaces — someone had to ask what a term means, or noticed two names for one thing, or one name for two. Never batch-extracted at session end: that's a chore that gets skipped, after the context that made the ambiguity obvious is gone. Name arch-sync as the sanctioned backstop: its diff sweep catches what live sessions missed.
+
 ### CLAUDE.md
 
 Entry point for agents. Contains:
-- Read order (README → ARCHITECTURE.md → docs/coding-style.md → docs/adr/)
+- Read order (README → docs/glossary.md → ARCHITECTURE.md → docs/coding-style.md → docs/adr/) — glossary first, it's the vocabulary everything else is written in
 - Non-negotiables for this project
 - Project-specific guidance for skills (implementor, brainstormer, etc.)
 
