@@ -7,6 +7,12 @@ user-invocable: false
 
 The exploration is done. The decisions are made. What remains is a plan that a separate implementation session can execute without asking the original human.
 
+## Unresolved Decisions
+
+By this point every decision should be made. If you hit one that isn't — and the answer isn't obvious from the exploration or the codebase — ask the user now, while they're here. Use AskUserQuestion for a clean choice between options; ask directly for anything open-ended.
+
+**Never defer a question into the plan.** No "open question for the human," no "ask before implementing," no "resolve before task N." The implementer cannot ask the original human — a plan containing a question is a plan that blocks. Every decision lands in the plan as a decision, with its reasoning.
+
 ## The Plan
 
 Save to the project's existing plan or task folder if one exists. Otherwise, save in the working directory. Filename: `plan-YYYY-MM-DD-<topic-slug>.md`
@@ -51,7 +57,7 @@ Launch review subagents (Task) to read the plan cold. Provide ONLY the plan file
 
 ### Integrate findings
 
-Collect findings from self-check and subagents. For gaps — missing information needed for implementation — fix the plan directly. If a finding contradicts a decision made during exploration, surface it to the user rather than overriding it.
+Collect findings from self-check and subagents. For gaps — missing information needed for implementation — fix the plan directly. If a finding contradicts a decision made during exploration, surface it to the user and wait for their answer — do not override the decision yourself, and do not park it in the plan as an open question. The plan is not done while a blocking question stands unanswered.
 
 ## When done
 
