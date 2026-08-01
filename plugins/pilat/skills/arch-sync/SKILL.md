@@ -88,7 +88,7 @@ If you see decisions that look significant or hard-to-reverse, flag them as pote
 - Migration from one approach to another
 - New cross-cutting concern (email, telemetry, auth, queueing)
 
-Threshold: if reverting the choice would require touching 3+ unrelated files OR creates an external dependency the team will have to maintain — ADR candidate. Note "consider ADR for X" in the report.
+Threshold: if reverting the choice would require touching 3+ unrelated files OR creates an external dependency the team will have to maintain — ADR candidate. Note "consider ADR for X" in the report. Before flagging, glance at `docs/adr/` — some decisions get their ADR written at handoff, and one an existing ADR already covers is recorded, not a candidate; re-flagging it turns into an offer to write what's already written.
 
 ## What You Don't Do
 
