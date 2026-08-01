@@ -122,13 +122,22 @@ Like the other docs, it carries its own maintenance rule. Write it in near the t
 Entry point for agents. Contains:
 - Read order (README → docs/glossary.md → ARCHITECTURE.md → docs/coding-style.md → docs/adr/) — glossary first, it's the vocabulary everything else is written in
 - Non-negotiables for this project
+- The ADR trigger (below)
 - Project-specific guidance for skills (implementor, brainstormer, etc.)
 
-**If CLAUDE.md already exists** — its content belongs to the user, treat it as sacred. Your job is to add the architecture-docs glue (read order, `/pilat:arch-sync` pointer, "keep docs accurate" reminder) without disturbing anything that's already there.
+The ADR trigger goes in verbatim:
 
-Approach by content-type, not by heading name. If you're appending list items (file paths in a read order), find an existing list-shaped section (`## Read Order`, `## Docs`, etc.) and extend it — append-only, never reorder or remove existing entries even if they look stale (that's the user's call). If you're adding prose (sync pointer, warnings), find a prose section about docs or create a new `## Architecture Docs` section. If your payload has both shapes, split it across the matching targets — don't force everything into one place.
+```markdown
+Whenever you make a significant or hard-to-reverse design decision (a tradeoff someone might question in six months), write an ADR at `docs/adr/<NNNN>-<slug>.md` (next free number). ADRs explain *why*; ARCHITECTURE.md explains *what*.
+```
 
-If nothing relevant exists, append a new `## Architecture Docs` section at the end with read order + sync pointer + reminder.
+The trigger is load-bearing: docs/adr/README.md also says when to write one, but only someone already writing an ADR opens that file — the trigger has to sit in always-loaded context or the directory stays empty forever. And verbatim is deliberate: the phrasing is tuned so the "someone might question it in six months" test makes a model recognize the moment when it arrives — paraphrasing into the project's voice quietly blunts it.
+
+**If CLAUDE.md already exists** — its content belongs to the user, treat it as sacred. Your job is to add the architecture-docs glue (read order, the ADR trigger above, `/pilat:arch-sync` pointer, "keep docs accurate" reminder) without disturbing anything that's already there.
+
+Approach by content-type, not by heading name. If you're appending list items (file paths in a read order), find an existing list-shaped section (`## Read Order`, `## Docs`, etc.) and extend it — append-only, never reorder or remove existing entries even if they look stale (that's the user's call). If you're adding prose (sync pointer, warnings), find a prose section about docs or create a new `## Architecture Docs` section. **The ADR trigger is the one exception — it does NOT go under a docs heading.** It's a behavioral directive: file it with the project's rules or non-negotiables, beside the other always-obeyed instructions. Under `## Architecture Docs` or any reference heading it reads as documentation and gets skimmed past — the opposite of the always-loaded rule it's meant to be. If your payload has both shapes, split it across the matching targets — don't force everything into one place, and never let the trigger ride along into the docs section.
+
+If nothing relevant exists, append a new `## Architecture Docs` section at the end with read order + sync pointer + reminder — but the ADR trigger still lands with the rules, not in it. If there's no rules-type section either, give the trigger its own heading (e.g. `## Decision Records`) rather than burying it under the docs section.
 
 Show the user a unified diff before saving. They may accept everything, reject everything, or accept only some hunks — re-render with only accepted hunks before writing. If they reject everything, warn them that without read-order links in CLAUDE.md, future agents may miss the new docs.
 
@@ -137,6 +146,8 @@ Show the user a unified diff before saving. They may accept everything, reject e
 Decision log directory:
 - `README.md` explaining the ADR pattern (what an ADR is, when to write one, the filename convention used here)
 - `TEMPLATE.md` for new decisions
+
+The README documents the pattern; what actually gets ADRs written is the trigger line in CLAUDE.md above. A when-to-write rule parked in a file nobody opens until they're already writing one fires exactly never.
 
 **Filename convention:** `NNNN-kebab-case-title.md` with a zero-padded sequential number (e.g., `0001-postgres-over-mysql.md`, `0002-use-event-sourcing.md`). This is the standard ADR convention per Martin Fowler and adr-tools — easy to reference ("see ADR-7"), trivially sortable. Document this convention in the `README.md` you create.
 

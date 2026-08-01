@@ -1,5 +1,5 @@
 ---
-description: "External code review by fresh-eyes subagents after implementation. Invoked by implementor."
+description: "External code review by fresh-eyes subagents after implementation. Invoked by implementor and by brainstormer's mechanical path."
 user-invocable: false
 ---
 
@@ -18,6 +18,8 @@ What makes these reviews useful is context. Each reviewer needs:
 - **The goal** — the task or plan that drove this implementation (paste the relevant section into each reviewer's prompt, don't summarize it away)
 - **What changed** — the actual modifications (staged, unstaged, or committed — whatever reflects the current work)
 - **Key decisions** — especially the non-obvious ones and their reasoning
+- **Where to look** — the changed files plus the neighbors you already know matter: callers, the tests that cover them, the existing pattern the code imitates. Name them as starting points, not boundaries — the "what's missing" angle in particular must look beyond them.
+- **What was consciously punted** — if the plan carried an "Out of scope, accepted" list, hand it to each reviewer: those corners are settled by a conscious call, not missed, and that binds the "what's missing" angle too. Only a plainly unsafe punt is worth reopening.
 
 Without this, review degenerates into surface-level linting. Reviewers report findings with file paths and specific concerns, not general commentary.
 

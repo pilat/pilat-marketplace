@@ -22,6 +22,7 @@ The audience is a **fresh session that cannot ask the original human**:
 - **Goal**: what we're trying to achieve and why, in one paragraph.
 - **Decisions**: what was chosen, why, and what was traded away — so the implementer understands the reasoning and doesn't try to reverse it.
 - **Constraints**: explicit rules where it matters — what the implementer must or must not do.
+- **Out of scope, accepted**: corner cases raised and consciously not handled — each named, with the one-line why. Recorded so the implementer neither handles them nor wonders, and review doesn't flag them as missed.
 - **Affected code**: actual files that will change and why, grounded in what was explored.
 - **Tasks**: broken into steps with acceptance criteria. Each task should be completable in a single focused session. Consider how each task should be verified — this might mean test cases, but could also be manual checks, metrics, or integration tests depending on what the project already does.
 - Describe what to build. Reference existing patterns instead of writing code. When no patterns exist, describe the approach — a brief example can anchor understanding, but the plan is not the place to write the implementation.
@@ -51,13 +52,20 @@ You have something the implementer won't: the full exploration context. Every de
 
 Launch review subagents (Task) to read the plan cold. Provide ONLY the plan file path — do not summarize the exploration, do not add "helpful context," do not explain what the plan is about. The subagent must experience exactly what the implementer will: the plan file and the codebase, nothing else.
 
-**One subagent (straightforward plan):** "You are about to implement this plan in a fresh session with no other context. Read it and identify every point where you would need to stop and ask a question, make an assumption, or guess. For each, say what's missing and what you'd need to know to proceed."
+Repo artifacts are not context contamination. Tell each critic except Reuse to orient via `ARCHITECTURE.md` and `docs/glossary.md` if they exist, before grepping — the implementer will have those too, so reading them keeps the simulation faithful and saves the re-discovery cost. Reuse gets no pointer: its job is exhaustive search of the actual code, and a doc index invites stopping at what's documented.
 
-**Two subagents (multi-task or cross-cutting plan):** The first is the builder — same brief as above, walks through each step, finds where they'd get stuck. The second is the reviewer: "Someone implemented this plan. You're reviewing their work. Based ONLY on what the plan says, how would you verify the implementation is correct? Where could two reasonable implementers produce meaningfully different results from these same instructions?"
+Two families of angles — transport (can a stranger run this?) and design (does what it builds hold up?):
+
+- **Builder** (always): "You are about to implement this plan in a fresh session with no other context. Read it and identify every point where you would need to stop and ask a question, make an assumption, or guess. For each, say what's missing and what you'd need to know to proceed."
+- **Reviewer** (multi-task or cross-cutting plan): "Someone implemented this plan. You're reviewing their work. Based ONLY on what the plan says, how would you verify the implementation is correct? Where could two reasonable implementers produce meaningfully different results from these same instructions?"
+- **Premortem** (any plan that carries design decisions): "This plan shipped and broke in production. What most plausibly broke? Hunt corner cases the plan doesn't handle, invariants materialized in types, tests, or assertions that it ignores, interactions with existing behavior — and check each claim against the actual code before reporting it. Treat what the plan marks out-of-scope-accepted as settled unless it's plainly unsafe. If nothing plausibly breaks, say so — don't manufacture findings."
+- **Reuse** (when the plan builds new components): "For each component this plan builds new, search the codebase for an existing implementation. Reinvention means something existing already does the same job — not a shared primitive it builds on, not a partial or differently-scoped match. If nothing genuinely equivalent exists, say so."
+
+Scale by trigger, not fixed buckets: run each critic whose trigger the plan meets — builder always, premortem wherever design decisions ride, reuse wherever new components do, reviewer for multi-task or cross-cutting work. A small plan can hand one subagent two angles — except Reuse, which never folds: its job is exhaustive code search, and pairing it with a doc-fed angle reopens the exact shortcut its no-pointer rule closes. Fold premortem into the builder or reviewer instead.
 
 ### Integrate findings
 
-Collect findings from self-check and subagents. For gaps — missing information needed for implementation — fix the plan directly. If a finding contradicts a decision made during exploration, surface it to the user and wait for their answer — do not override the decision yourself, and do not park it in the plan as an open question. The plan is not done while a blocking question stands unanswered.
+Collect findings from self-check and subagents. For gaps — missing information needed for implementation — fix the plan directly. If a finding contradicts a decision made during exploration, surface it to the user and wait for their answer — do not override the decision yourself, and do not park it in the plan as an open question. A corner case the plan doesn't handle gets one of exactly two endings: handled — the plan gains the task or constraint — or consciously punted with the user's say-so and recorded under out-of-scope, accepted. If it was never discussed during exploration, it goes to the user now, while they're still here. Dismissing a critic's finding as noise also happens aloud, in one line — the user can't veto a dismissal they never saw. The plan is not done while a blocking question stands unanswered.
 
 ## When done
 
