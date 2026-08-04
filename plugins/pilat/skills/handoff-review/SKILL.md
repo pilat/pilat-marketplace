@@ -11,7 +11,7 @@ The implementation is complete — self-reviewed, tests passing, build clean. Bu
 
 Launch parallel review subagents (Task) to examine the implementation from independent angles. Sonnet is a natural fit — fast, cost-effective, genuinely different pattern-matching from the implementing model. Scale the number of reviewers to the scope: a single-file fix needs one or two; a multi-service feature needs more.
 
-Give each reviewer a distinct angle — "correctness and edge cases", "consistency with existing codebase patterns", "what's missing." Don't prescribe checklists; frame the angle and let the reviewer decide what matters.
+Give each reviewer a distinct angle — "correctness and edge cases", "consistency with existing codebase patterns", "what's missing." Don't invent checklists; frame the angle and let the reviewer decide what matters. The exception is the checklist the project wrote about itself: if `docs/coding-style.md` exists, the consistency reviewer checks the diff against it rule by rule — each violation cites file:line and quotes the broken rule, a checkable claim rather than a style opinion. A large diff earns this check its own reviewer.
 
 What makes these reviews useful is context. Each reviewer needs:
 
@@ -35,4 +35,4 @@ A clean review is a good outcome — it means the implementation was solid. Repo
 
 ## Report
 
-What was found, what was fixed, what needs user input. Brevity over ceremony.
+What was found, what was fixed, what needs user input — findings numbered, so the reply can point at one; the numbers just appear, unremarked. Brevity over ceremony.
