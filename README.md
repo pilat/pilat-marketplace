@@ -97,7 +97,7 @@ And one choice runs through all of them: the skills lean on persuasion, not comm
 
 ### brainstormer
 
-Your entry point for anything new. Explore before you build. It asks one question at a time and reads your actual code instead of guessing, until the problem is genuinely understood. No solutions until they're earned. If the project keeps a glossary or an ADR log, it speaks that vocabulary and won't silently re-litigate a settled decision.
+Your entry point for anything new. Explore before you build. It asks one question at a time and reads your actual code instead of guessing, until the problem is genuinely understood. No solutions until they're earned. If the project keeps a glossary or an ADR log, it speaks that vocabulary and won't silently re-litigate a settled decision. And when a second problem surfaces mid-dialogue, it names it as separate and pushes back instead of quietly absorbing it — a plan carries one problem's decisions well and several problems' badly.
 
 ```
 /pilat:brainstormer I want to add caching to our API
@@ -112,7 +112,7 @@ The bridge between thinking and doing. When exploration is done, brainstormer ca
 - **Premortem** — this plan shipped and broke in production; what broke?
 - **Reuse** — what does this build that the codebase already has?
 
-Scaled to the plan: a one-task fix gets one critic, cross-cutting work gets all four. Every unhandled corner case comes back to you — handled in the plan, or recorded there as consciously out of scope. And questions never get parked in the plan: the implementer can't ask the original human, so a plan containing a question is a plan that blocks. Not user-invocable.
+Scaled to the plan: a one-task fix gets one critic, cross-cutting work gets all four. The draft they read also carries the brainstormer's unspoken assumptions — warm-context notes each critic checks against the code; what survives shapes the plan, the notes themselves never reach it. Every unhandled corner case comes back to you — handled in the plan, or recorded there as consciously out of scope. And questions never get parked in the plan: the implementer can't ask the original human, so a plan containing a question is a plan that blocks. Not user-invocable.
 
 ### implementor
 

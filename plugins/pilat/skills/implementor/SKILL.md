@@ -40,7 +40,7 @@ Fix issues found. Then proceed to handoff-review (see Completion).
 When reality differs from plan:
 
 1. **Acknowledge:** "Plan said X, but Y needed because [reason]"
-2. **Decide:** If the deviation is minor, note it and keep going. If it changes the architecture or affects other tasks, ask the user.
+2. **Decide:** If the deviation is minor, note it and keep going. If it changes the architecture or affects other tasks, ask the user. A question here fills a gap the plan left open — it never reopens a decision the plan records. When implementation shows a plan decision itself doesn't hold, or the only useful question would reverse one, that's the plan failing, not a blank to fill in: stop, report which decision broke and why, and point back to `pilat:brainstormer` — the decision was made in dialogue and gets unmade there, with the context this session doesn't have. An implementation session that redesigns on the fly leaves the plan, the ADRs, and the code telling three different stories.
 3. **Document:** Note deviations for the final summary.
 
 ## Subagent Delegation
