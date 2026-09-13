@@ -26,7 +26,7 @@ A typical assistant answers with a middleware file and a config block. Brainstor
 
 > Is this about protecting the API from outside traffic, or about one internal consumer starving the others? Those want different designs.
 
-One question per message, each earned by reading real code before asking. When new questions start refining the picture instead of redirecting it, exploration is done: the decisions compress into a plan file, critics with no memory of the conversation attack the plan, and a fresh session builds it. The exchange above is illustrative — the behavior is what the skills are written to produce.
+One question per message, each earned by reading real code before asking. When new questions start refining the picture instead of redirecting it, exploration is done: the decisions compress into a plan file, the author checks it against the discussion, a critic with no memory of the conversation reviews it, and a fresh session builds it. The exchange above is illustrative — the behavior is what the skills are written to produce.
 
 ## The pipeline
 
@@ -73,11 +73,11 @@ flowchart TD
     classDef artifact fill:#fef9c3,stroke:#ca8a04,color:#713f12;
 ```
 
-Blue is a skill you invoke. Green runs automatically once the pipeline reaches it. Yellow is an artifact that survives between sessions: the plan and the architecture docs. Grey is where you start and finish.
+Blue is a skill you invoke. Green starts automatically once the pipeline reaches it; handoff-review pauses for your approval before cold code review. Yellow is an artifact that survives between sessions: the plan and the architecture docs. Grey is where you start and finish.
 
-There are two ways in. A new feature starts at **brainstormer**. A bug starts at **root-cause**, which diagnoses it and hands the diagnosis to the same place, so a fix is explored like any other change instead of reflex-patched. From there it's a single line: understand, write the plan — fresh critics attack it before it's final — **start a fresh session**, build, review, open the PR. That fresh-session step is the load-bearing one: the plan file is where the exploration context gets dropped on purpose, so implementation runs in a clean window.
+There are two ways in. A new feature starts at **brainstormer**. A bug starts at **root-cause**, which diagnoses it and hands the diagnosis to the same place, so a fix is explored like any other change instead of reflex-patched. From there it's a single line: understand, write and self-check the plan — one cold critic reviews it before it's final — **start a fresh session**, build, check delivery against the plan, inspect the code yourself, approve code review, then prepare for a PR. That fresh-session step is the load-bearing one: the plan file is where the exploration context gets dropped on purpose, so implementation runs in a clean window.
 
-One shortcut exists: a purely mechanical change — nothing weighed, nothing chosen — is implemented right in the brainstormer session, skipping the plan; with zero decisions there's nothing for a plan to transport and nothing for its critics to attack. The shortcut skips the deciding, not the shipping: fresh-eyes review and doc sync still run, same as after a planned build.
+One shortcut exists: a purely mechanical change — nothing weighed, nothing chosen — is implemented right in the brainstormer session, skipping the plan; with zero decisions there's nothing for a plan to transport and nothing for its critic to examine. It skips the spec review too, but still offers cold code review for your approval, followed by doc sync as after a planned build.
 
 Off to the side, drawn in dotted lines, is the optional architecture-docs track: `arch-init` scaffolds the docs once (ARCHITECTURE.md, CLAUDE.md, a coding-style doc, a project glossary, an ADR log), and after each cycle `arch-sync` brings them back in step with the code. No docs, no sync, and it stays out of the way.
 
@@ -89,7 +89,7 @@ Off to the side, drawn in dotted lines, is the optional architecture-docs track:
 
 **Mistakes get more expensive the longer they live.** A wrong assumption caught in conversation costs a sentence. The same assumption caught after the code is written costs a rewrite. Every handoff in the chain (exploration to plan, plan to build, build to review) is a checkpoint to catch the problem while it's still cheap. That's the plain intuition behind shift-left, and you don't need the disputed cost-curve numbers for it to hold.
 
-**You can't review your own code.** You see what you meant, not what's on the screen. It's worse with AI-written code: it looks intentional (clean names, idiomatic structure), so it slides past the instinct that makes a reviewer slow down. So the last step brings in fresh eyes: separate subagents with no memory of writing the code, usually a cheaper model like Sonnet, each hunting for what the author's eye skipped.
+**You can't review your own code.** You see what you meant, not what's on the screen. It's worse with AI-written code: it looks intentional (clean names, idiomatic structure), so it slides past the instinct that makes a reviewer slow down. So review brings in fresh eyes: one subagent checks delivery against the plan, then, after your approval, one or two code reviewers hunt for defects with angles chosen for the actual change.
 
 And one choice runs through all of them: the skills lean on persuasion, not command. Where a typical skill leads with "you MUST," these mostly name the trap and give the reason; the hard rules are saved for the handoff seams, where a skipped step quietly breaks the chain. The bet: a model that understands why not to patch a symptom can spot the exception a blanket rule would just steamroll. Whether it pays off is yours to judge. The skills are short, and the reasoning is right there on the surface.
 
@@ -105,14 +105,11 @@ Your entry point for anything new. Explore before you build. It asks one questio
 
 ### plan-handoff *(automatic)*
 
-The bridge between thinking and doing. When exploration is done, brainstormer calls this to compress everything you decided — the constraints, the rejected alternatives, the edge cases — into a dated plan file a fresh session can execute without you in the room. Then critics who never saw the conversation read the plan cold, each from its own angle:
+The bridge between thinking and doing. When exploration is done, brainstormer calls this in the same context to compress everything you decided — the constraints, the rejected alternatives, the edge cases — into a dated plan file. The author first checks that the discussion survived the transfer and verifies the assumptions behind the draft. Missing facts are investigated; unresolved design choices come back to you before independent review.
 
-- **Builder** — where would a stranger have to stop and guess?
-- **Reviewer** — where could two reasonable implementers produce different results?
-- **Premortem** — this plan shipped and broke in production; what broke?
-- **Reuse** — what does this build that the codebase already has?
+Then one critic reads the plan cold, without the conversation or the author's self-check notes. It checks whether a stranger can implement and verify the intended result, whether the design holds up against existing behavior, and whether proposed components duplicate what the codebase already has. Relevant facts and reasoning belong in the plan itself, where the implementer can use them too.
 
-Scaled to the plan: a one-task fix gets one critic, cross-cutting work gets all four. The draft they read also carries the brainstormer's unspoken assumptions — warm-context notes each critic checks against the code; what survives shapes the plan, the notes themselves never reach it. Every unhandled corner case comes back to you — handled in the plan, or recorded there as consciously out of scope. And questions never get parked in the plan: the implementer can't ask the original human, so a plan containing a question is a plan that blocks. Not user-invocable.
+The author fills technical gaps and closes factually refuted findings with evidence. Findings that change behavior, scope, accepted risk, or a recorded decision come back to you as focused choices. Unhandled corner cases receive a decided treatment or your explicit acceptance as out of scope; unknown deployment assumptions never become automatic exclusions or reduced implementations. Design questions are settled before the plan is complete. After changes from the cold review, the same critic checks the affected sections and dependencies. Not user-invocable.
 
 ### implementor
 
@@ -122,9 +119,11 @@ Execute the plan. Start a clean session and point it at the plan file. It works 
 /pilat:implementor
 ```
 
-### handoff-review *(automatic)*
+### handoff-review *(automatic entry, code review by approval)*
 
-The moment the build finishes — implementor's, or a mechanical change made right in brainstormer — it hands the diff to a panel of fresh-eyes subagents, usually a cheaper model like Sonnet. Each one takes a different angle, looking for what the author's eye slid past. It fixes the clear wins and reports the rest. A clean review is reported as exactly that — it means the implementation was solid. Not user-invocable.
+Runs in the implementation context. One cold spec reviewer checks the code against the plan; the implementor makes one consolidated correction round and the reviewer verifies it. Unresolved consequential mismatches go to the user. Once the spec review passes, the skill reports readiness for inspection and asks whether to run code review. Mechanical changes skip the spec stage but use the same approval gate.
+
+After approval, one or two cold code reviewers examine the actual diff with complementary, task-specific angles. They use project instructions, coding style, and glossary, and report concrete failure scenarios ranked P0–P2, separately from nits. Confirmed defects are fixed; simple, safe, useful nits are fixed too. Follow-up reviews resume the same agents where supported and focus on changes and affected dependencies. The skill owns fixes and verification, and never treats pending code review as passed. Not user-invocable.
 
 ### root-cause
 
@@ -168,7 +167,7 @@ Rewrites user-facing text (PR descriptions, commit messages, docs) to read like 
 | Something's broken and I want the cause, not a band-aid | root-cause |
 | We talked it through, now write the plan | plan-handoff (automatic) |
 | Plan's ready, build it | implementor |
-| It's built, review it | handoff-review (automatic) |
+| It's built, review it | handoff-review (automatic spec review; code review by approval) |
 | Set up architecture docs for this project | arch-init |
 | Did the code drift from the docs? | arch-sync (automatic) |
 | I want to build a new skill | skill-creator |
@@ -179,7 +178,7 @@ Rewrites user-facing text (PR descriptions, commit messages, docs) to read like 
 Friction is the feature here, and it isn't free. The honest ledger:
 
 - **It asks before it writes.** For a change where a wrong guess costs nothing, that's overhead, not discipline. Use the mechanical shortcut — or skip the pipeline entirely. It's built for changes that are expensive to get wrong.
-- **It spends more tokens.** Plan critics and review panels are extra model calls. Reviewers usually run on a cheaper model, but a full cycle still costs more than one-shot generation. The bet is that it's cheaper than the rewrite.
+- **It spends more tokens.** The cold plan critic, implementation spec reviewer, and one or two code reviewers are extra model calls. Code review waits for your approval, and follow-ups resume existing reviewers where supported. A full cycle still costs more than one-shot generation; the bet is that it's cheaper than the rewrite.
 - **The gates are persuasion, mostly.** A model can still cut a corner. The design makes that the conspicuous exception rather than the invisible default — but not impossible.
 - **The fresh-session handoff is on you.** The pipeline writes the plan; only you can open the clean window and point implementor at it. Skip that step and you drag hours of exploration context into the build — the exact failure the plan file exists to prevent.
 
